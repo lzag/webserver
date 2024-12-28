@@ -5,6 +5,7 @@ socket_listen($socket);
 socket_set_nonblock($socket);
 
 $clients = [];
+$indexFile = 'page.html';
 
 while (1) {
     // Add socket accept monitoring
@@ -32,7 +33,20 @@ while (1) {
                 $input = trim($input);
                 echo "conn #[$id] input: $input\n";
                 list($method, $path, $protocol) = explode(' ', $input, 3);
-                $response = "HTTP/1.1 200 OK\r\nRequested path: $path\r\n\r\n";
+                if (!isset($method) || !isset($path) || !isset($protocol)) {
+                    $response = "HTTP/1.1 400 Bad Request\r\n\r\n";
+                    socket_write($_conn, $response, strlen($response));
+                    continue;
+                }
+                if ($path == '/') {
+                    $path = "/$indexFile";
+                }
+                if (!file_exists(__DIR__ . $path)) {
+                    $response = "HTTP/1.1 404 Not Found\r\nRequested path: $path\r\n\r\n";
+                } else {
+                    $response = "HTTP/1.1 200 OK\r\nRequested path: $path\r\n\r\n";
+                    $response .= file_get_contents(__DIR__ . $path);
+                }
                 socket_write($_conn, $response, strlen($response));
             }
         }
