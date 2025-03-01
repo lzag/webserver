@@ -8,17 +8,18 @@ for ($i = 0; $i < $poolSize; $i++) {
     $pool[] = new Runtime();
 }
 $indexFile = 'page.html';
+$docRoot = __DIR__;
 // Function to process a request
 $processRequest = function ($input): string {
-    // sleep(1);
+    global $docRoot;
     @list($method, $path, $protocol) = explode(' ', $input, 3);
     if (!isset($method) || !isset($path) || !isset($protocol)) {
         return "HTTP/1.1 400 Bad Request\r\n\r\n";
     }
     if ($path == '/') {
-        $path = "/page.html";
+        $path = $docRoot . "/page.html";
     }
-    if (!file_exists(__DIR__ . $path)) {
+    if (!file_exists($docRoot . $path)) {
         $response = "HTTP/1.1 404 Not Found\r\nRequested path: $path\r\n\r\n";
     } else {
         $responseBody = file_get_contents(__DIR__ . $path);
