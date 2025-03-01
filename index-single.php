@@ -37,15 +37,13 @@ $clients = [];
 $seconds = 0;
 $running = true;
 
-// Signal handler for both SIGINT
+// Signal handler for SIGINT
 pcntl_signal(SIGINT, function () use (&$running) {
     $running = false;
     echo "\nCaught signal, shutting down...\n";
 });
 
 while ($running) {
-    // Dispatch any pending signals
-    pcntl_signal_dispatch();
     // https://beej.us/guide/bgnet/html/split/system-calls-or-bust.html#acceptthank-you-for-calling-port-3490%2E
     if ($conn = socket_accept($socket)) {
         if ($conn !== false) {
@@ -72,6 +70,8 @@ while ($running) {
             }
         }
     }
+    // Dispatch any pending signals
+    pcntl_signal_dispatch();
     usleep(1);
 }
 
