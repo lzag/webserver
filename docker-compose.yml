@@ -1,13 +1,12 @@
 services:
   php:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    stop_signal: SIGINT
     ports:
       - "127.0.0.1:9090:9090"
     volumes:
       - .:/var/www/html
     working_dir: /var/www/html
-    command: php index.php
+    command: php index2.php
     extra_hosts:
       - "host.docker.internal:host-gateway"
