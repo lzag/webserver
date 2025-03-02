@@ -24,19 +24,19 @@ This repository contains two PHP-based TCP socket servers running on port 9090, 
 - **Use Case**: Demonstrates threading and scalability for heavier workloads.
 
 Running the single-threaded server
-```
+```bash
 docker compose up --env INDEX_FILE=multi.php
 ```
 Running the multi-threaded server
-```
+```bash
 docker compose up --env INDEX_FILE=single.php
 ```
 Test the server with a simple PHP client
-```
+```bash
 docker compose exec php-server php client.php
 ```
 Test single-threaded connection with netcat (if it's single-threaded server you can type quit to close the connection)
-```
+```bash
 docker compose exec php-server sh -c 'echo "GET / HTTP/1.0\r\n\r\n" | netcat localhost 9090'
 ```
 Running docker compoes up will also start Locust that can be accessed in browser on localhost://8089
