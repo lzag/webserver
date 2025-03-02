@@ -10,7 +10,7 @@ for ($i = 0; $i < $poolSize; $i++) {
 
 // Function to process a request
 $processRequest = function ($input): string {
-    // simulate a slow request
+    // simulate a slow response
     sleep(1);
     $docRoot = "/var/www/html";
     @list($method, $path, $protocol) = explode(' ', $input, 3);
@@ -50,7 +50,7 @@ $running = true;
 // Signal handler for SIGINT
 pcntl_signal(SIGINT, function () use (&$running) {
     $running = false;
-    echo "\nCaught signal, shutting down...\n";
+    echo "Caught signal, shutting down...\n";
 });
 
 while ($running || !empty($futures)) {
@@ -65,11 +65,11 @@ while ($running || !empty($futures)) {
             if (in_array($socket, $readfds, true) === true) {
                 $incoming_conn = socket_accept($socket);
                 socket_set_nonblock($incoming_conn);
-                if (count($clients) >= 10) {
+                if (count($clients) >= 100) {
                     $refusal = "HTTP/1.1 503 Service Unavailable\r\nContent-Length: 20\r\n\r\nServer is full, sorry";
                     socket_write($incoming_conn, $refusal, strlen($refusal));
                     socket_close($incoming_conn);
-                    echo "Refused a connection - client limit (10) reached\n";
+                    echo "Refused a connection - client limit (100) reached\n";
                 } else {
                     echo "Connection is accepted\n";
                     // adding the socket to the clients array

@@ -60,12 +60,14 @@ while ($running) {
             if ($input = socket_read($conn, 512)) {
                 $input = trim($input);
                 echo "Connection #[$id] input: $input\n";
+                // simulate a slow response
+                sleep(1);
                 $ack = "HTTP/1.0 200 OK\r\nContent-Length: 0\r\n\r\n";
                 socket_write($conn, $ack, strlen($ack));
                 if ($input == 'quit') {
                     socket_close($conn);
                     unset($clients[$id]);
-                    echo "conn #[$id] is disconnected\n";
+                    echo "Connection #[$id] is disconnected\n";
                 }
             }
         }
