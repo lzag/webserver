@@ -25,11 +25,11 @@ This repository contains two PHP-based TCP socket servers running on port 9090, 
 
 Running the single-threaded server
 ```bash
-INDEX_FILE=multi.php docker compose up 
+INDEX_FILE=single.php docker compose up 
 ```
 Running the multi-threaded server
 ```bash
-INDEX_FILE=single.php docker compose up
+INDEX_FILE=multi.php docker compose up
 ```
 Test the server with a simple PHP client
 ```bash
